@@ -1,0 +1,13 @@
+getGeneData
+
+- Allen Data
+    - SDS Data (sag & coronal)
+    - Gene Data
+    - Official Gene Name (in case I am searching an acronym)
+    - USD (download, plot ROIs and save fig and data)
+    * add check to make sure USD and SDS have same section_plane
+
+- Entrez Data
+
+
+Make Gene card

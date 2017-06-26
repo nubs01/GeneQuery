@@ -20,6 +20,7 @@ if isempty(search1)
     return;
 end
 
+% Delete gene data
 gd = [AtlasGeneDir geneCodex{search1,8}];
 disp(['Deleting Gene Directory: ' geneCodex{search1,8})
 rmdir(gd,'s');
