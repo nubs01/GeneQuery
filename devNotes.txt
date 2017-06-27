@@ -5,6 +5,17 @@ getGeneData
     - Gene Data
     - Official Gene Name (in case I am searching an acronym)
     - USD (download, plot ROIs and save fig and data)
+        - USD Struct:
+            gene
+            id
+            expression_energy
+            zEE
+            section_plane
+            structures_of_interest
+            section_plane_id
+            USD_file
+            plot_file
+    - Expression Grid Data (save in folder)
     * add check to make sure USD and SDS have same section_plane
 
 - Entrez Data
