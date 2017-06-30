@@ -5,13 +5,11 @@ usdDat = [];
 expPlots = [];
 
 % Find gene data in saved list of AllenAtlasGenes
+if ischar(gene)
 load('AllenAtlasGenes.mat')
 idx = find(cellfun(@(x) ~isempty(strfind(x,...
     [' ' upper(gene) ' '])),AllGeneAliases));
 if isempty(idx)
-    geneDat = [];
-    sdsDat = [];
-    usdDat = [];
     fprintf('Gene %s not found in Allen Mouse Database. Please update gene list and try again.\n',gene);
     return;
 end
@@ -22,6 +20,9 @@ end
 
 geneDat = AllGenes(idx);
 fprintf('Found gene %s listed as %s in Allen Database.\nGetting Expression Data...\n',gene,geneDat.acronym);
+elseif isstruct(gene) % So function can be passed geneDat instead of a geneName
+    geneDat = gene;
+end
 geneName = geneDat.acronym;
 
 % Get Section Dataset Info from Allen Atlas
@@ -64,7 +65,7 @@ usdDat = struct('gene',repmat({geneName},1,numel(sdsDat)),'date_retrieved',date,
             'plot_file','','expression_energy',[],...
             'structures_of_interest',{structs},'structIDX',[],...
             'structure_unionizes',[],'zEE',[]);
-            
+
 for i=1:numel(sdsDat),
     fprintf('Obtaining Expression Data for %s: %i...\n',geneName,sdsDat(i).id);
     USD = QueryAllenAPI(AllenAPI_StructUnionizedPath(sdsDat(i).id));

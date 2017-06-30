@@ -1,12 +1,15 @@
 function geneCard = getGeneData(gene,reQuery)
 load('AllenAPI_Paths.mat')
-if ~exist('reQuery,'var')
+if ~exist('reQuery','var')
     reQuery = 0; % Variable to bypass geneCodex lookup and reQuery & save gene data from online
 end
 
-% TODO: queryGeneCodex
 if ~reQuery
-    codexEntry = queryGeneCodex(gene);
+    if isstruct(gene)
+        codexEntry = queryGeneCodex(gene.acronym);
+    else
+        codexEntry = queryGeneCodex(gene);
+    end
     if ~isempty(codexEntry)
         geneCard = load([AtlasGeneDir codexEntry{2,9}]);
         return;
@@ -15,7 +18,9 @@ end
 
 % Get Allen Data
 [geneDat,sdsDat,usdDat,expPlots] = getAllenGeneData(gene);
-
+if isstruct(gene)
+    gene = gene.acronym;
+end
 if isempty(geneDat)
     geneName = gene;
 else
