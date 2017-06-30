@@ -22,3 +22,15 @@ getGeneData
 
 
 Make Gene card
+
+GeneCard.section_datasets
+    id
+    section_plane_id
+    delegate
+    section_plane
+    expression_energy
+    structures_of_interest
+    USD_file
+    zEE
+    plot_file
+    grid_data_path
