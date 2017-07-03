@@ -1,4 +1,4 @@
-function out = addGeneToCodex(CodexDir,geneCard,geneDir)
+function codexEntry = addGeneToCodex(CodexDir,geneCard,geneDir)
 
 load([CodexDir 'geneCodex.mat']);
 
@@ -19,3 +19,4 @@ end
 
 LastAdditon = date;
 save([CodexDir 'geneCodex.mat'],'geneCodex','LastAddition','LastUpdate');
+codexEntry = [geneCodex(1,:); codexEntry];

@@ -55,10 +55,10 @@ if ~isempty(usdDat)
         % Save plots
         plot_file = sprintf('%s%s_%s_id%i_expressionPlot.pdf',...
             geneDir,geneName,usdDat(i).section_plane,sdsDat(i).id);
-        saveas(plot_file,expPlots(i),'pdf');
+        saveas(expPlots(i),[AtlasGeneDir plot_file],'pdf');
         usdDat(i).plot_file = plot_file;
         geneCard.section_datasets(i).plot_file = plot_file;
-
+        close(expPlots(i));
         % Download grid data
         try
             grid_data_path = [geneDir filesep geneName '_' num2str(sdsDat(i).id) '_ExpressionGrid'];
@@ -68,13 +68,13 @@ if ~isempty(usdDat)
         catch
             disp(['Failed to retrieve grid data from ' AllenAPI_GridDownloadPath(sdsDat(i).id)])
         end
+        geneCard.section_datasets(i).USD_file = usd_file;
     end
     USD = usdDat;
     save([AtlasGeneDir usd_file],'USD')
-    geneCard.USD_file = usd_file;
     clear USD
 end
 
-gcPath = [geneDir geneName '.mat']
+gcPath = [geneDir geneName '.mat'];
 save([AtlasGeneDir gcPath],'geneCard')
-out = addGeneToCodex(AtlasGeneDir,geneCard,geneDir);
+codexEntry = addGeneToCodex(AtlasGeneDir,geneCard,geneDir);

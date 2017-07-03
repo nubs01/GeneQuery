@@ -1,7 +1,10 @@
 function [geneCard] = makeGeneCard(geneDat,sdsDat,usdDat,enzDat)
 geneCard = struct('name','','mouse_entrez_id',[],...
-    'section_datasets',[],'human_locus','','full_name','','summary','',...
-    'human_entrez_id',[],'aliases','','date_retrieved','');
+    'section_datasets',struct('id', [], 'section_plane_id', [], ...
+    'delegate', [], 'section_plane', '', 'expression_energy', [],...
+    'structures_of_interest', {}, 'USD_file', '', 'zEE', [],...
+    'plot_file', '', 'grid_data_path', ''),'human_locus','','full_name',...
+    '','summary','','human_entrez_id',[],'aliases','','date_retrieved','');
 if isempty(geneDat) && isempty(enzDat)
     return;
 end
@@ -32,13 +35,16 @@ geneCard.aliases = [' ' strjoin(alias,' ') ' '];
 secPlanes = {'coronal','sagittal'};
 if ~isempty(sdsDat)
     for i=1:numel(sdsDat),
-        geneCard.section_datasets(i) = struct('id', sdsDat(i).id, 'section_plane_id', sdsDat(i).plane_of_section_id, 'delegate', sdsDat(i).delegate, 'section_plane', '', 'expression_energy', [], 'structures_of_interest', [], 'USD_file', '', 'zEE', [], 'plot_file', '', 'grid_data_path', '');
-        if ~isempty(usdDat) && numel(usdDat>=i)
-            if ~strcmp(secPlane{sdsDat(i).plane_of_section_id},usdDat(i).section_plane)
+        geneCard.section_datasets(i).id = sdsDat(i).id;
+        geneCard.section_datasets(i).section_plane_id = sdsDat(i).plane_of_section_id;
+        geneCard.section_datasets(i).delegate = sdsDat(i).delegate;
+        
+        if ~isempty(usdDat) && numel(usdDat)>=i
+            if ~strcmp(secPlanes{sdsDat(i).plane_of_section_id},usdDat(i).section_plane)
                 error('USD and SDS plane do not match!');
             end
             geneCard.section_datasets(i).section_plane = usdDat(i).section_plane;
-            geneCard.section_datasets(i).expression_energy = usdDat(i).expression_energy
+            geneCard.section_datasets(i).expression_energy = usdDat(i).expression_energy;
             geneCard.section_datasets(i).zEE = usdDat(i).zEE;
             geneCard.section_datasets(i).structures_of_interest = usdDat(i).structures_of_interest;
         end

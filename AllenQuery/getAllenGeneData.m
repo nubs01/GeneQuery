@@ -77,7 +77,7 @@ for i=1:numel(sdsDat),
         case 1
             secPlane = 'coronal';
         case 2
-            secPlane = 'sagittal'
+            secPlane = 'sagittal';
     end
     warning off
     [EE,zEE,structIDX,expPlots(i)] = plotUSDGeneExpression(USD,StructuresOfInterest);

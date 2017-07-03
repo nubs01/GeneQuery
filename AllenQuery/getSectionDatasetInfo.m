@@ -25,5 +25,5 @@ if numel(sdsDat)>1
     end
 end
 if isempty(sdsDat)
-    fprintf('Section Data Set not found for %s-%s\n',geneNamw,secPlane);
+    fprintf('Section Data Set not found for %s-%s\n',geneName,secPlane);
 end
