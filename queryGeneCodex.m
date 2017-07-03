@@ -43,8 +43,7 @@ if strcmp(queryField,'Aliases')
     search = find(cellfun(@(x) any(strcmp(upper(strsplit(x,' ')),upper(Query))),geneCodex(:,searchCol)));
 elseif strcmp(queryField,'Section_Dataset_IDs')
     search = find(cellfun(@(x) any(x==Query),geneCodex(:,searchCol)));
-else
-    if ischar(geneCodex{2,searchCol})
+elseif ischar(geneCodex{2,searchCol})
     search = find(strcmp(upper(geneCodex(:,searchCol)),upper(Query)));
 else
     search = find([geneCodex{:,searchCol}]==Query);
@@ -54,10 +53,10 @@ if isempty(search)
 end
 codexEntry = geneCodex([1 search],:);
 
-search = strcmp(upper(gene),geneCodex(:,1));
+search = strcmp(upper(Query),geneCodex(:,1));
 search1 = find(search);
 if isempty(search1)
-    search1 = find(cellfun(@(x) ~isempty(strfind([' ' x ' '],[' ' upper(gene) ' '])),geneCodex(:,2)));
+    search1 = find(cellfun(@(x) ~isempty(strfind([' ' x ' '],[' ' upper(Query) ' '])),geneCodex(:,2)));
 end
 if isempty(search1)
     out = -1;

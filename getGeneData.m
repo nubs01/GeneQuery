@@ -12,6 +12,7 @@ if ~reQuery
     end
     if ~isempty(codexEntry)
         geneCard = load([AtlasGeneDir codexEntry{2,9}]);
+        geneCard = geneCard.geneCard;
         return;
     end
 end
