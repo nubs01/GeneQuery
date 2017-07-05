@@ -17,16 +17,24 @@ if isempty(search1)
 end
 if isempty(search1)
     out = -1;
+    disp('Gene not found in codex.')
     return;
 end
-
-% Delete gene data
 gd = [AtlasGeneDir geneCodex{search1,8}];
-disp(['Deleting Gene Directory: ' geneCodex{search1,8})
-rmdir(gd,'s');
+
 disp(['Removing gene from codex: ' gene])
 geneCodex(search1,:) = [];
-TotalGenes = TotalGenes - 1;
 LastUpdate = date;
-save(codexPath,'geneCodex','TotalGenes','LastUpdate','LastAddition');
+save(codexPath,'geneCodex','LastUpdate','LastAddition');
+
+% Delete gene data
+
+disp(['Deleting Gene Directory: ' gene])
+
+if ~exist(gd,'dir')
+    out = -1;
+    disp('Gene Directory not found')
+    return;
+end
+rmdir(gd,'s');
 out = 1;

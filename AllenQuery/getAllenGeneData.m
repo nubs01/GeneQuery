@@ -14,8 +14,13 @@ if isempty(idx)
     return;
 end
 if numel(idx)>1
-    error(sprintf('Too many genes found to match %s:\n\t%s',...
-        gene,strjoin(AllGeneList(idx),'\n\t')))
+    idx2 = find(strcmp(upper(AllGeneList(idx)),upper(gene)));
+    if ~isempty(idx2) && numel(idx2)==1
+        idx = idx(idx2);
+    else
+        error(sprintf('Too many genes found to match %s:\n\t%s',...
+            gene,strjoin(AllGeneList(idx),'\n\t')))
+    end
 end
 
 geneDat = AllGenes(idx);

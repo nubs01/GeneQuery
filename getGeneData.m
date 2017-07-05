@@ -62,8 +62,12 @@ if ~isempty(usdDat)
         % Download grid data
         try
             grid_data_path = [geneDir filesep geneName '_' num2str(sdsDat(i).id) '_ExpressionGrid'];
+            currDir = pwd;
+            cd(AtlasGeneDir);
             a = unzip(AllenAPI_GridDownloadPath(sdsDat(i).id),...
-                [AtlasGeneDir grid_data_path]);
+                grid_data_path);
+            cd(currDir);
+
             geneCard.section_datasets(i).grid_data_path = grid_data_path;
         catch
             disp(['Failed to retrieve grid data from ' AllenAPI_GridDownloadPath(sdsDat(i).id)])
