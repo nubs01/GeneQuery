@@ -1,4 +1,4 @@
-function geneCard = getGeneData(gene,reQuery)
+function [geneCard,codexEntry] = getGeneData(gene,reQuery)
 load('AllenAPI_Paths.mat')
 if ~exist('reQuery','var')
     reQuery = 0; % Variable to bypass geneCodex lookup and reQuery & save gene data from online
@@ -35,6 +35,7 @@ enzDat = getEntrezGeneData(geneName);
 % Make geneCard
 geneCard = makeGeneCard(geneDat,sdsDat,usdDat,enzDat);
 if isempty(geneCard.name)
+    geneCard = [];
     return;
 else
     geneName = geneCard.name;

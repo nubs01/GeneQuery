@@ -1,45 +1,36 @@
 function [geneList,geneCards,geneTotals] = collectGeneList(fn)
 if ~exist('fn','var')
     [fn,fd] = uigetfile('.txt','Choose gene list');
-else
+elseif ischar(fn)
     [fd,fn] = fileparts(fn);
     fd = [fd filesep];
     fn = [fn '.txt'];
 end
-Genes = textread([fd fn],'%s');
-Genes = unique(upper(Genes));
+if ischar(fn)
+    Genes = textread([fd fn],'%s');
+    Genes = unique(upper(Genes));
+elseif isstruct(fn)
+    Genes = fn;
+end
 geneTotals = [numel(Genes) 0 0]; % Gene totals [searched sans_duplicates]
 
-geneList = [];
-geneCards = [];
+geneList = queryGeneCodex('');
+geneCards = makeGeneCard([],[],[],[]);
 for i=1:numel(Genes),
-    gc = queryGeneCodex(Genes{i});
-    if iscell(gc)
-        disp(['Found gene: ' Genes{i}])
-       if isempty(geneList)
-           geneList = gc;
-           gCard = load(gc{2,9});
-           gCard = gCard.geneCard;
-           geneCards = gCard;
-       else
-           geneList(end+1,:) = gc(2,:);
-           gCard = load(gc{2,9});
-           gCard = gCard.geneCard;
-           geneCards(end+1) = gCard;
-       end
+    if isstruct(Genes)
+        Gene = Genes(i);
     else
-        geneCard = getGeneData(Genes{i});
-        gc = queryGeneCodex(Genes{i});
-        if isempty(geneList)
-            geneList = gc;
-            geneCards = geneCard;
-        else
-            geneList(end+1,:) = gc(2,:);
-            geneCards(end+1) = geneCard;
-        end
+        Gene = Genes{i};
+    end
+    [gCard,codexEntry] = getGeneData(Gene);
+    if isempty(gc)
+        % Skip gene and count genes not Found (in codex or online)
+    else
+        geneList(end+1,:) = codexEntry(2,:);
+        geneCards(end+1) = gCard;
     end
 end
-
+geneCards = geneCards(2:end);
 % Remove any duplicates that may have been hidden via aliases earlier
 [~,b] = unique(geneList(2:end,1));
 b = sort(b,'ascend');

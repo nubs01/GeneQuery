@@ -5,6 +5,7 @@ function codexEntry = queryGeneCodex(Query,queryField,codexPath)
 % row 2+ is the codex information. Accepts a string search Query.
 % codexPath is an optional input indicating which codex to search, otherwise it searches the codex in the AtlasGeneDir
 % queryField is an optional string input indicating which column of the codex to search for your query. If not included the search will look through the Genes and Aliases
+% if Query is empty '' this will return the title row of the codexs
 
 % geneCodex: [Gene,Aliases,Full_Name,Human_Locus,
 %     Human_Entrez_ID,Mouse_Entrez_ID,Section_Dataset_IDs,geneDir,
@@ -16,6 +17,11 @@ if ~exist('codexPath','var')
 end
 load(codexPath)
 codexEntry = [];
+
+if isempty(Query)
+    codexEntry = geneCodex(1,:);
+    return;
+end
 
 if ~exist('queryField','var')
     search1 = queryGeneCodex(Query,'Gene');
