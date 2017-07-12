@@ -12,10 +12,11 @@ if ischar(fn)
 elseif isstruct(fn)
     Genes = fn;
 end
-geneTotals = [numel(Genes) 0 0]; % Gene totals [searched sans_duplicates]
+geneTotals = [numel(Genes) 0 0 0]; % Gene totals [searched found_sans_duplicates found_expression notFound]
 
 geneList = queryGeneCodex('');
 geneCards = makeGeneCard([],[],[],[]);
+notFound = {};
 for i=1:numel(Genes),
     if isstruct(Genes)
         Gene = Genes(i);
@@ -23,9 +24,13 @@ for i=1:numel(Genes),
         Gene = Genes{i};
     end
     [gCard,codexEntry] = getGeneData(Gene);
-    if isempty(gc)
+    if isempty(gCard)
         % Skip gene and count genes not Found (in codex or online)
+        fprintf('No Data found for %s\n',Gene)
+        notFound{end+1} = Gene;
+        continue;
     else
+        fprintf('Obtained Data for %s\n',Gene);
         geneList(end+1,:) = codexEntry(2,:);
         geneCards(end+1) = gCard;
     end
@@ -43,3 +48,5 @@ B = cellfun(@(x) ~isempty(x),geneList(2:end,7));
 expCards = geneCards(B);
 expList = geneList([true;B],:);
 geneTotals(3) = numel(geneCards);
+geneTotals(4) = numel(notFound);
+fprintf('Searched %i Genes\nFound %i Genes\n%i of these had expression data\nNo Data found for %i Genes\n',geneTotals(1),geneTotals(2),geneTotals(3),geneTotals(4));

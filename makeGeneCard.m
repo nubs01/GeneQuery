@@ -15,7 +15,7 @@ if ~isempty(geneDat)
     geneCard.name = upper(geneDat.acronym);
     geneCard.mouse_entrez_id = geneDat.entrez_id;
     geneCard.full_name = geneDat.original_name;
-    alias = upper(strsplit(geneDat.alias_tags));
+    alias = upper(strsplit(char(geneDat.alias_tags)));
 else
     % Preference Allen acronym over entrez name
     geneCard.name = upper(enzDat.name);

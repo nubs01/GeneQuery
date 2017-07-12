@@ -24,5 +24,5 @@ if ~isempty(fn)
     for i=1:N,
         fprintf(fid,'%s\n',upper(outList{i}));
     end
-    fclose(fid);`
+    fclose(fid);
 end
