@@ -1,4 +1,10 @@
-function [geneList,geneCards,geneTotals] = collectGeneList(fn)
+function [geneList,geneCards,geneTotals] = collectGeneList(fn,expNeeded)
+% fn can be a string path to a text file, a cell array of Gene names or a
+% struct array of geneDat structures from the AllenDB
+if ~exist('expNeeded','var')
+    expNeeded = 0;
+end
+
 if ~exist('fn','var')
     [fn,fd] = uigetfile('.txt','Choose gene list');
 elseif ischar(fn)
@@ -9,6 +15,8 @@ end
 if ischar(fn)
     Genes = textread([fd fn],'%s');
     Genes = unique(upper(Genes));
+elseif iscell(fn)
+    Genes = upper(fn);
 elseif isstruct(fn)
     Genes = fn;
 end
@@ -20,17 +28,19 @@ notFound = {};
 for i=1:numel(Genes),
     if isstruct(Genes)
         Gene = Genes(i);
+        geneName = Gene.acronym;
     else
         Gene = Genes{i};
+        geneName = Gene;
     end
     [gCard,codexEntry] = getGeneData(Gene);
     if isempty(gCard)
         % Skip gene and count genes not Found (in codex or online)
-        fprintf('No Data found for %s\n',Gene)
+        fprintf('No Data found for %s\n',geneName)
         notFound{end+1} = Gene;
         continue;
     else
-        fprintf('Obtained Data for %s\n',Gene);
+        fprintf('Obtained Data for %s\n',geneName);
         geneList(end+1,:) = codexEntry(2,:);
         geneCards(end+1) = gCard;
     end
@@ -45,8 +55,10 @@ geneTotals(2) = size(geneList,1)-1;
 
 % Find genes with mouse expression data
 B = cellfun(@(x) ~isempty(x),geneList(2:end,7));
-expCards = geneCards(B);
-expList = geneList([true;B],:);
-geneTotals(3) = numel(geneCards);
+geneTotals(3) = numel(find(B));
+if expNeeded
+    expCards = geneCards(B);
+    expList = geneList([true;B],:);
+end
 geneTotals(4) = numel(notFound);
 fprintf('Searched %i Genes\nFound %i Genes\n%i of these had expression data\nNo Data found for %i Genes\n',geneTotals(1),geneTotals(2),geneTotals(3),geneTotals(4));
