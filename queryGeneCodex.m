@@ -11,8 +11,9 @@ function codexEntry = queryGeneCodex(Query,queryField,codexPath)
 %     Human_Entrez_ID,Mouse_Entrez_ID,Section_Dataset_IDs,geneDir,
 %     geneCard,date_retreived]
 
-load('AllenAPI_Paths.mat')
+% Load default codex
 if ~exist('codexPath','var')
+    load('AllenAPI_Paths.mat')
     codexPath = [AtlasGeneDir 'geneCodex.mat'];
 end
 load(codexPath)
@@ -23,6 +24,7 @@ if isempty(Query)
     return;
 end
 
+% Search both Genes and Aliases
 if ~exist('queryField','var')
     search1 = queryGeneCodex(Query,'Gene');
     search2 = queryGeneCodex(Query,'Aliases');
@@ -36,7 +38,7 @@ if ~exist('queryField','var')
         codexEntry = [search1;search2(2:end,:)];
         % keep unique entries
         [~,b] = unique(codexEntry(2:end,1));
-        codexEntry = codexEntry([1 b+1],:);
+        codexEntry = codexEntry([1;b+1],:);
     end
     return;
 end
@@ -45,17 +47,22 @@ if isempty(searchCol)
     error('Please search valid field of codex');
 end
 
+Query = strrep(Query,'*','\w+');
+
 if strcmp(queryField,'Aliases')
-    search = find(cellfun(@(x) any(strcmp(upper(strsplit(x,' ')),upper(Query))),geneCodex(:,searchCol)));
-elseif strcmp(queryField,'Section_Dataset_IDs')
-    search = find(cellfun(@(x) any(x==Query),geneCodex(:,searchCol)));
+    search = find(cellfun(@(y) any(~cellfun(@isempty,regexp(strsplit(y,' '),Query))),upper(geneCodex(:,searchCol))));
+elseif any(strcmp(queryField,{'Section_Dataset_IDs','Mouse_Entrez_ID','Human_Entrez_ID'}))
+    search = find(cellfun(@(x) any(~cellfun(@isempty, regexp(cellstr(num2str(x)),Query))),geneCodex(:,searchCol)));
 elseif ischar(geneCodex{2,searchCol})
-    search = find(strcmp(upper(geneCodex(:,searchCol)),upper(Query)));
+    search = find(~cellfun(@isempty,regexp(upper(geneCodex(:,searchCol)),Query)));
 else
     search = find([geneCodex{:,searchCol}]==Query);
 end
+
 if isempty(search)
     return;
+elseif ~isrow(search)
+    search = search';
 end
 codexEntry = geneCodex([1 search],:);
 
