@@ -47,7 +47,7 @@ if isempty(searchCol)
     error('Please search valid field of codex');
 end
 
-Query = strrep(Query,'*','\w+');
+Query = ['^(' strrep(upper(Query),'*','\w*') ')$'];
 
 if strcmp(queryField,'Aliases')
     search = find(cellfun(@(y) any(~cellfun(@isempty,regexp(strsplit(y,' '),Query))),upper(geneCodex(:,searchCol))));
