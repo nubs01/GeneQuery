@@ -1,8 +1,10 @@
 function [plotHandle,metadata] = multiGeneExpressionGrid(geneCards,metadata)
+% [plotHangle,metadata] = multiGeneExpressionGrid(geneCards,metadata)
 % geneCards is a structure array of GeneCards gathered with collectGeneList
 % metadata is a structure made with multiGeneMetaGUI and contains all input
 % parameters for this plotting as well as source data. This function will add
 % to metadata as it runs and return the complete metadata as an output.
+
 saveIt = 0;
 skipAnalysis = 0;
 load('AllenAPI_Paths.mat');

@@ -1,11 +1,13 @@
 function codexEntry = queryGeneCodex(Query,queryField,codexPath)
+% codexEntry = queryGeneCodex(Query,queryField,codexPath)
 % Searches the local geneCodex to see if data for a Query is
 % available and returns [] if Query is not in codex otherwise returns the
 % codex entry for the desired gene or genes, row 1 is the column headings and
-% row 2+ is the codex information. Accepts a string search Query.
+% row 2+ is the codex information. Accepts a string or number search Query.
+% * can be used to search partials (i.e. '*ORF*' will return ORF6 and C12ORF10)
 % codexPath is an optional input indicating which codex to search, otherwise it searches the codex in the AtlasGeneDir
-% queryField is an optional string input indicating which column of the codex to search for your query. If not included the search will look through the Genes and Aliases
-% if Query is empty '' this will return the title row of the codexs
+% queryField is an optional string input indicating which column of the codex to search for your query. If not included the search will look through Genes and Aliases
+% if Query is empty '' this will return the title row of the codex
 
 % geneCodex: [Gene,Aliases,Full_Name,Human_Locus,
 %     Human_Entrez_ID,Mouse_Entrez_ID,Section_Dataset_IDs,geneDir,

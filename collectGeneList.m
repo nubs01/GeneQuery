@@ -1,6 +1,9 @@
 function [geneList,geneCards,geneTotals] = collectGeneList(fn,expNeeded)
-% fn can be a string path to a text file, a cell array of Gene names or a
-% struct array of geneDat structures from the AllenDB
+% [geneList, geneCards,geneTotals] = collectGeneList(fn,expNeeded) collects
+% gene data for all genes in fn. fn can be a path to a text gene list, a cell
+% array of gene names or a struct array of Allen gene data. If expNeeded is set
+% to 1 (default = 0) then only genes with expression data are returned.
+
 if ~exist('expNeeded','var')
     expNeeded = 0;
 end

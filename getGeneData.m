@@ -1,4 +1,13 @@
 function [geneCard,codexEntry] = getGeneData(gene,reQuery)
+% [geneCard,codexEntry] = getGeneData(gene,reQuery) returns the geneCards and
+% codexEntries for a gene. Gene will first be looked for the offline gene
+% database, and if not found will be queried from the Allen and Entrez
+% databases to get Mouse and Human data about the gene. If reQuery is set to 1
+% (default = 0), then the geneData will be reQueried from the online databses
+% even if found in the local database. Local database info will be replaced. If
+% gene data is not found in Allen Database, you may need to update the the
+% offline list of all Allen DB genes.
+
 load('AllenAPI_Paths.mat')
 if ~exist('reQuery','var')
     reQuery = 0; % Variable to bypass geneCodex lookup and reQuery & save gene data from online
