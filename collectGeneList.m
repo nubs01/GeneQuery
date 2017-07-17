@@ -8,7 +8,7 @@ if ~exist('expNeeded','var')
     expNeeded = 0;
 end
 
-if ~exist('fn','var')
+if ~exist('fn','var') || isempty(fn)
     [fn,fd] = uigetfile('.txt','Choose gene list');
 elseif ischar(fn)
     [fd,fn] = fileparts(fn);
@@ -60,8 +60,8 @@ geneTotals(2) = size(geneList,1)-1;
 B = cellfun(@(x) ~isempty(x),geneList(2:end,7));
 geneTotals(3) = numel(find(B));
 if expNeeded
-    expCards = geneCards(B);
-    expList = geneList([true;B],:);
+    geneCards = geneCards(B);
+    geneList = geneList([true;B],:);
 end
 geneTotals(4) = numel(notFound);
 fprintf('Searched %i Genes\nFound %i Genes\n%i of these had expression data\nNo Data found for %i Genes\n',geneTotals(1),geneTotals(2),geneTotals(3),geneTotals(4));

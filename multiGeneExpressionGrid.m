@@ -1,5 +1,5 @@
 function [plotHandle,metadata] = multiGeneExpressionGrid(geneCards,metadata)
-% [plotHangle,metadata] = multiGeneExpressionGrid(geneCards,metadata)
+% [plotHandle,metadata] = multiGeneExpressionGrid(geneCards,metadata)
 % geneCards is a structure array of GeneCards gathered with collectGeneList
 % metadata is a structure made with multiGeneMetaGUI and contains all input
 % parameters for this plotting as well as source data. This function will add
@@ -10,6 +10,10 @@ skipAnalysis = 0;
 load('AllenAPI_Paths.mat');
 if ~exist('metadata','var')
     metadata = multiGeneMetaGUI;
+    if isempty(metadata)
+        plotHandle = [];
+        return;
+    end
 end
 if ischar(metadata) % if its a path to a saved data file
     datFile = metadata;
@@ -22,10 +26,13 @@ end
 if isnan(metadata.expression_thresh)
     thresh = 0.1; % only normalizedexpression > thresh is added to the total
     metadata.expression_thresh = thresh;
+else
+    thresh = metadata.expression_thresh;
 end
 
 metadata.Genes = geneCards;
 metadata.size_grid = [67 41 58]; % grid size for reshaping energy.raw data
+metadata.creation_date = date;
 sec_plane = metadata.Section_Plane;
 
 if ~isempty(metadata.save_directory)
@@ -90,6 +97,7 @@ end
 clearvars -except saveDir geneCards totNormEnergy sizeGrid sec_plane datFile N metadata saveIt
 
 disp('Plotting...')
+figH = figure();
 engGrid = reshape(totNormEnergy,sizeGrid);
 engScat = GQ_make3DPlottable(engGrid);
 EDS = engScat;
@@ -100,7 +108,7 @@ zEDS(zEDS<=0) = [];
 plotHandle = scatter3(EDS(:,2),EDS(:,3),-EDS(:,1),4,zEDS,'filled');
 colormap('jet');
 c = colorbar;
-whitebg([0 0 0])
+whitebg(figH,[0 0 0])
 ylabel('Medial-Lateral')
 xlabel('Anterior-Posterior')
 zlabel('Dorsal-Ventral')

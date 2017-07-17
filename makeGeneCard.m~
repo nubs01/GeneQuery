@@ -23,12 +23,13 @@ end
 
 if ~isempty(enzDat)
     % Preference entrez full name over Allen full name
+    geneCard.full_name = enzDat.nomenclaturename;
     alias = [alias upper(strsplit(strrep(enzDat.otheraliases,', ',' ')))];
     A = {'full_name','human_locus','summary','human_entrez_id'};
     B = {'nomenclaturename','maplocation','summary','uid'};
-    for i=1:numel(A),
+    for i=1:3,
         if isfield(enzDat,B{i})
-            if i==numel(A)
+            if i==3
                 geneCard.(A{i}) = str2num(enzDat.(B{i}));
             else
                 geneCard.(A{i}) = enzDat.(B{i});
