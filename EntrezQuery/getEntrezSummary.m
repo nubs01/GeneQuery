@@ -3,7 +3,7 @@ id_str=num2str(id,'%d,');
 id_str = id_str(1:end-1);
 
 load('EntrezAPI_Paths.mat')
-readOpts = weboptions;
+readOpts = weboptions('ContentType','text');
 readOpts.Timeout=80;
 
 disp(['Querying Entrez database for summary: ' EntrezAPI_SummaryPath(db,id_str)])
